@@ -1,0 +1,24 @@
+---
+# This configuration file contains the different types of devices, what data they have to analyze, and how to obtain that data.
+custom:
+  stats:
+
+hdd:
+  # Array of stats objects. Each one has its own comnand. Set up so that if multiple share the same command, that they will be obtained all at once.
+  stats:
+    - temperature:
+        command: ["sudo hddtemp MOUNTPOINT | cut"]
+    - error_count:
+        command: [""]
+    - otherdiskstatsthatcouldtellusiffailing:
+        command: [""]
+
+cpu:
+  stats:
+    - temperature:
+      command: ["sudo sensors | grep"]
+
+temperature_sensor:
+  stats:
+    - temperature:
+        command: ["sudo impmitool -H ...."]
