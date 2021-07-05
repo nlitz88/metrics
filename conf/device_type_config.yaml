@@ -2,10 +2,9 @@
 # This configuration file contains the different types of devices, what data they have to analyze, and how to obtain that data.
 custom:
   init_sequences:
-    set_device_value:
-      - device_value:
-        command:
-        keys:
+    - device_value: ""
+      command: ""
+      keys: [""]
   stats:
 
 hdd:
@@ -29,18 +28,18 @@ hdd:
 
 cpu:
   init_sequences:
-    - device_value:
-      command:
-      keys:
+    - device_value: ""
+      command: ""
+      keys: [""]
   stats:
     - stat_type: "temperature"
       command: ["sudo sensors | grep"]
 
 temperature_sensor:
   init_sequences:
-    - device_value:
-      command:
-      keys:
+    - device_value: ""
+      command: ""
+      keys: [""]
   stats:
     - stat_type: "temperature"
       command: ["sudo impmitool -H ...."]

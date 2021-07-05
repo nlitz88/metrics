@@ -34,9 +34,12 @@ for device in devicesFile:
         # TODO If init_type == "set_value"...implement this later.
         command = initSeq["command"]
         keys = initSeq["keys"]
-        
+        if len(keys) > 0:
+            keyValues = [device[keys[x]] for x in range(len(keys))]
         deviceValue = initSeq["device_value"]
-        value = check_output([command % ",".join(keys)], shell=True, universal_newlines=True)
+        value = check_output([command % ",".join(keyValues)], shell=True, universal_newlines=True)
+        if isinstance(value, str):
+            value = value.rstrip()
         device[deviceValue] = value
         print(device)
 
