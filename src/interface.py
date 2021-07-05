@@ -70,3 +70,11 @@ for device in devicesFile:
 #       Then make a flask REST API that serves up data from the class.
 #       Also, can publish data on mqtt topics from the class.
 #       This way, the class can be what interfaces with both the API server and mqtt broker.
+#
+# TODO: I think it would also actually be better to "hardcode" or "embed" new device_types as new python modules or classes.
+#       This would work very similarly to how ESPHome requires users to custom implement functionality to interface with new/unknown devices.
+#       So for all common devices, I could just write modules that allow us to get data. They would just have to implement the operations of a
+#       "device-type" interface that would have operations like "initialize" and "getStatXXXX." Kind of backwards from the "make-everything-configurable"
+#       mindset, but I think it might just be more practical for anyone who actually wants to use this. Right now, I was aiming for more of a "no-code"
+#       kind of extensible application, but for most people, it would be no-code. And for those that really need more out of it,
+#       there would be an easy interface to implement against. Just a thought though.
