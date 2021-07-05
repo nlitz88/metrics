@@ -1,24 +1,46 @@
 ---
 # This configuration file contains the different types of devices, what data they have to analyze, and how to obtain that data.
 custom:
+  init_sequences:
+    set_device_value:
+      - device_value:
+        command:
+        keys:
   stats:
 
 hdd:
+  # This dictionary specifies a value and command to be added to each device upon initialization.
+  init_sequences:
+    # Could make another dictionary to specify initialization types...additions, configurations, etc...
+    - device_value: "dev_location"
+      command: "lsblk -o NAME,SERIAL | grep %s | cut -c 1-3"
+      # Array of device attributes/values that can be used to lookup other values. Must be at device[] level.
+      keys: ["serial_number"]
+
   # Array of stats objects. Each one has its own comnand. Set up so that if multiple share the same command, that they will be obtained all at once.
   stats:
-    - temperature:
-        command: ["sudo hddtemp MOUNTPOINT | cut"]
-    - error_count:
-        command: [""]
-    - otherdiskstatsthatcouldtellusiffailing:
-        command: [""]
+    # Consider making this an array of anonymous objects. Ex. - stat_name: "temperature" command: []
+    - stat_type: "temperature"
+      command: ["sudo hddtemp MOUNTPOINT | cut"]
+    - stat_type: "error_count"
+      command: [""]
+    - stat_type: "otherdiskstatsthatcouldtellusiffailing"
+      command: [""]
 
 cpu:
+  init_sequences:
+    - device_value:
+      command:
+      keys:
   stats:
-    - temperature:
+    - stat_type: "temperature"
       command: ["sudo sensors | grep"]
 
 temperature_sensor:
+  init_sequences:
+    - device_value:
+      command:
+      keys:
   stats:
-    - temperature:
-        command: ["sudo impmitool -H ...."]
+    - stat_type: "temperature"
+      command: ["sudo impmitool -H ...."]

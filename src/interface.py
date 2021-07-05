@@ -3,8 +3,8 @@ from subprocess import check_output
 
 # Specify path to configuration files.
 # TODO: Make a general program configuration file and specify a /conf directory location where all can be located.
-devicesFilePath = "/home/nlitz88/metrics/conf/devices.yaml"
-deviceTypeConfigFilePath = "/home/nlitz88/metrics/conf/device_type_config.yaml"
+devicesFilePath = "/home/nlitz88/repos/metrics/conf/devices.yaml"
+deviceTypeConfigFilePath = "/home/nlitz88/repos/metrics/conf/device_type_config.yaml"
 
 
 # Load configuration files as dictionaries.
@@ -18,10 +18,32 @@ with open(deviceTypeConfigFilePath) as f:
 # NOTE: Might consider implementing this in a way that is more generic across different device types.
 #       Could just be specificly for drives, but what if needed for PCIE devices, for instance?
 #       Maybe custom python modules could be an option for this just to keep it out of the main file.
-for device in devicesFile["disks"]:
-    diskSerial = device["serial_number"]
-    devLocation = check_output(["lsblk -o NAME,SERIAL | grep %s | cut -c 1-3" % diskSerial], shell=True, universal_newlines=True)
-    device["devLocation"] = "/dev/" + str(devLocation).rstrip()
+# Actually, I could do this by adding an array of "initialization" commands to run for each device type,
+# if need be. 
+
+# for device in devicesFile["disks"]:
+#     diskSerial = device["serial_number"]
+#     devLocation = check_output(["lsblk -o NAME,SERIAL | grep %s | cut -c 1-3" % diskSerial], shell=True, universal_newlines=True)
+#     device["devLocation"] = "/dev/" + str(devLocation).rstrip()
+
+# Device initialization.
+for device in devicesFile:
+    deviceType = device["device_type"]
+    # For each device value in the init_sequence, run the corresponding command with any keys and assign the value
+    for initSeq in deviceTypeConfigs[deviceType]["init_sequences"]:
+        # TODO If init_type == "set_value"...implement this later.
+        command = initSeq["command"]
+        keys = initSeq["keys"]
+        
+        deviceValue = initSeq["device_value"]
+        value = check_output([command % ",".join(keys)], shell=True, universal_newlines=True)
+        device[deviceValue] = value
+        print(device)
+
+# for deviceType in deviceTypeConfigs:
+#     for device in devicesFile:
+#         for init_seq in deviceTypeConfigs[deviceType]["init_sequences"]:
+#             print(init_seq)
 
 
 
