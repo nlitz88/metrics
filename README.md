@@ -15,3 +15,15 @@ This class is a base class that acts as a basic implementation of the Device Int
 
 #### Device Classes
 These classes are meant to extend the Device Base Class by overriding the implementations in the Device Base class as well as adding other custom operations as needed.
+
+
+## Publisher Classes
+
+**Publisher Classes** are defined for each different type of system that messages might want to be published to repeatedly. For instance, you might have a pubisher for mqtt, one for publishing values to a redis database, or maybe to mongo for long term storage.
+
+#### Publisher/Producer interface
+This interface would define operations like publish_data that would essentially receive that generic python dictionary with a devices data, transform it to whatever form is required (JSON), and then publish it to whichever service/server it is built for.
+
+
+TODO: there should be a separate python module (not interface) that is responsible for taking the data and making it available via a REST API. This could be like metricsserver or something.
+Anyways, the plan is to cache the data in redis, and then that server would basically be pulling data from redis upon request. Could also implement custom endpoints to make direct calls to get values directlyl raqther than through redis.
