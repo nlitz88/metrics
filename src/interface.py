@@ -1,6 +1,8 @@
 import yaml
 from subprocess import check_output
 
+from devicehdd import DeviceHdd
+
 # Specify path to configuration files.
 # TODO: Make a general program configuration file and specify a /conf directory location where all can be located.
 devicesFilePath = "/home/nlitz88/repos/metrics/conf/devices.yaml"
@@ -27,21 +29,21 @@ with open(deviceTypeConfigFilePath) as f:
 #     device["devLocation"] = "/dev/" + str(devLocation).rstrip()
 
 # Device initialization.
-for device in devicesFile:
-    deviceType = device["device_type"]
-    # For each device value in the init_sequence, run the corresponding command with any keys and assign the value
-    for initSeq in deviceTypeConfigs[deviceType]["init_sequences"]:
-        # TODO If init_type == "set_value"...implement this later.
-        command = initSeq["command"]
-        keys = initSeq["keys"]
-        if len(keys) > 0:
-            keyValues = [device[keys[x]] for x in range(len(keys))]
-        deviceValue = initSeq["device_value"]
-        value = check_output([command % ",".join(keyValues)], shell=True, universal_newlines=True)
-        if isinstance(value, str):
-            value = value.rstrip()
-        device[deviceValue] = value
-        print(device)
+# for device in devicesFile:
+#     deviceType = device["device_type"]
+#     # For each device value in the init_sequence, run the corresponding command with any keys and assign the value
+#     for initSeq in deviceTypeConfigs[deviceType]["init_sequences"]:
+#         # TODO If init_type == "set_value"...implement this later.
+#         command = initSeq["command"]
+#         keys = initSeq["keys"]
+#         if len(keys) > 0:
+#             keyValues = [device[keys[x]] for x in range(len(keys))]
+#         deviceValue = initSeq["device_value"]
+#         value = check_output([command % ",".join(keyValues)], shell=True, universal_newlines=True)
+#         if isinstance(value, str):
+#             value = value.rstrip()
+#         device[deviceValue] = value
+#         print(device)
 
 # for deviceType in deviceTypeConfigs:
 #     for device in devicesFile:
@@ -49,6 +51,12 @@ for device in devicesFile:
 #             print(init_seq)
 
 
+devices = []
+for device in devicesFile:
+    newHdd = DeviceHdd()
+    newHdd.initialize(device)
+    print(newHdd.get_device_data())
+    devices.append(newHdd)
 
 
 # NOTE: Kind of a big design decision:
