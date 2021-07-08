@@ -17,6 +17,7 @@ class Host:
 
     def initialize_devices(self):
         for device_yaml_dict in self.devices_file:
+            # Implement switch-like statement here to determine which device class to instantiate from each device_yaml_dict.
             newHdd = DeviceHdd()
             newHdd.initialize(device_yaml_dict)
             self.devices.append(newHdd)
