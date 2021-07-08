@@ -1,20 +1,33 @@
 import yaml
 from subprocess import check_output
 
+# Each device class must be imported here. 
 from devicehdd import DeviceHdd
 
-# Specify path to configuration files.
-# TODO: Make a general program configuration file and specify a /conf directory location where all can be located.
-devicesFilePath = "/home/nlitz88/repos/metrics/conf/devices.yaml"
-deviceTypeConfigFilePath = "/home/nlitz88/repos/metrics/conf/device_type_config.yaml"
+# class Host(HostInterface):
+class Host:
 
+    def __init__(self, devices_file_path):
+        self.devices_file_path = devices_file_path
+        # Load device configuration file as dictionary.
+        with open(self.devices_file_path) as f:
+            self.devices_file = yaml.safe_load(f)
+        self.devices = []
+        self.publishers = []
 
-# Load configuration files as dictionaries.
-with open(devicesFilePath) as f:
-    devicesFile = yaml.safe_load(f)
+    def initialize_devices(self):
+        for device_yaml_dict in self.devices_file:
+            newHdd = DeviceHdd()
+            newHdd.initialize(device_yaml_dict)
+            self.devices.append(newHdd)
+        print("Finished intiailizing devices.")
 
-with open(deviceTypeConfigFilePath) as f:
-    deviceTypeConfigs = yaml.safe_load(f)
+    def read_device_data(self):
+        for device in self.devices:
+            device_data = device.get_device_data()
+            # Give to publisher to publish to redis, mqtt topics, mongo, etc.
+            print(device_data)
+        print("Finished reading device data.")
 
 # Map drives by serial numbers to their current name (/dev/sd*). Add this key to the devices dictionary.
 # NOTE: Might consider implementing this in a way that is more generic across different device types.
@@ -51,12 +64,6 @@ with open(deviceTypeConfigFilePath) as f:
 #             print(init_seq)
 
 
-devices = []
-for device in devicesFile:
-    newHdd = DeviceHdd()
-    newHdd.initialize(device)
-    print(newHdd.get_device_data())
-    devices.append(newHdd)
 
 
 # NOTE: Kind of a big design decision:
