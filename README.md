@@ -32,6 +32,10 @@ Anyways, the plan is to cache the data in redis, and then that server would basi
 ## Host Classes
 **Host Classes** are defined for each different type of host that a publisher class might use to retrieve its data. This might be more appropriate in a situation where someone wants to utilize the publishing infrastructure of metrics without the default host class with all of its device collection methods. Hosts have a list of devices and publishers that they interact with.
 
+Additionally, a more common implementation of this interface is having both local and remote host implementations. In this way, one instance of metrics can instantiate multiple hosts, grabbing data from a local host that connects to the docker socket and another host whose devices are in a virtual machine and must be queried via ssh. In this model, devices in the devices.yaml file would specify a host. Additionally, a hosts.yaml file would define hosts by hosttype and IP adddress (and potentially any other variant/types that might be created).
+
+One machine would have one instance of metrics running (perhaps on the hypervisor, or a dockerhost vm) that spawns hosts in new threads (or just one thread, multiple connections, something like this) where they can then be used to get their respective device data.
+
 #### Host Interface
 This interface defines the operations that each host class must implement. If a class is a host, then it must be able to initialize a list of devices to get data from, publish device data to a list of publishers, etc. There may be more requirements as time moves along.
 
