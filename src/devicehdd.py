@@ -21,4 +21,5 @@ class DeviceHdd(DeviceBase):
         temperature = re.search("[0-9]{1,}°C$", temperature).group(0)
         temperature = re.search("[0-9]{1,}", temperature).group(0)
         result = {"temperature": temperature, "unit": "C"}
+        print(result)
         return result

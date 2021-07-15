@@ -1,5 +1,6 @@
 import yaml
 from subprocess import check_output
+import threading
 
 # Each device class must be imported here. 
 from devicehdd import DeviceHdd
@@ -19,6 +20,14 @@ class Host:
             self.publishers_file = yaml.safe_load(f)
         self.devices = []
         self.publishers = []
+        # List of device read threads.
+        self.read_threads = []
+        # For now, each device's data will be added to an entire devices_read_dat array. Then, each entry will be published according to how that publisher works.
+        # I.e., all as one entry or each individually.
+        self.devices_read_data = []
+        # TODO: Also should implement another type of function for host that allows it to spawn a different type of device that independently reads and publishes independly in the same thread.
+        #       I.e., don't have to be held back by other devices waiting to retrieve data on the regular interval, if that's a concern.
+        #       Something like "start_ansynchronous_devices" that spawns a thread where they can read and publish one their own terms/interval.
 
     def initialize_devices(self):
         for device_yaml_dict in self.devices_file:
@@ -30,6 +39,7 @@ class Host:
 
     def intialize_publishers(self):
         for publisher_yaml_dict in self.publishers_file:
+            # If statements to get what publisher to instantiate and add.
             if(publisher_yaml_dict["publisher_type"] == "publishercsv"):
                 newPublisherCsv = PublisherCsv()
                 newPublisherCsv.initialize(publisher_yaml_dict)
@@ -38,10 +48,23 @@ class Host:
 
     def read_device_data(self):
         for device in self.devices:
-            device_data = device.get_device_data()
-            # Give to publisher to publish to redis, mqtt topics, mongo, etc.
-            print(device_data)
+
+            read_thread = threading.Thread(target=device.get_device_data)
+            self.read_threads.append(read_thread)
+            read_thread.start()
+            print("started thread")
+            # device_data_dict = device.get_device_data()
+            # Append device data to devices_read_data array to then be published.
+            # self.devices_read_data.append(device_data_dict)
+            
+        for thread_num, t in enumerate(self.read_threads):
+            t.join()
+            # print(f"Thread {thread_num} finished getting device data")
         print("Finished reading device data.")
+
+    def publish_device_data(self):
+        for publisher in self.publishers:
+            publisher.publish_data(self.devices_read_data)
 
 # Map drives by serial numbers to their current name (/dev/sd*). Add this key to the devices dictionary.
 # NOTE: Might consider implementing this in a way that is more generic across different device types.

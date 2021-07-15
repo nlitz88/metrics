@@ -1,4 +1,5 @@
 from host import Host
+
 import time
 
 # Specify path to configuration files.
@@ -10,7 +11,8 @@ publishers_file_path = "/home/nlitz88/repos/metrics/conf/publishers.yaml"
 metrics_host = Host(devices_file_path, publishers_file_path)
 metrics_host.initialize_devices()
 metrics_host.intialize_publishers()
-
-while True:
-    metrics_host.read_device_data()
-    time.sleep(1.5)
+metrics_host.read_device_data()
+# metrics_host.publish_device_data()
+# while True:
+#     metrics_host.read_device_data()
+#     time.sleep(1.5)
