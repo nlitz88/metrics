@@ -1,0 +1,3 @@
+---
+- publisher_type: "publishercsv"
+  csv_filepath: "/home/nlitz88/example_data.csv"

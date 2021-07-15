@@ -3,15 +3,20 @@ from subprocess import check_output
 
 # Each device class must be imported here. 
 from devicehdd import DeviceHdd
+from publishercsv import PublisherCsv
 
 # class Host(HostInterface):
 class Host:
 
-    def __init__(self, devices_file_path):
+    def __init__(self, devices_file_path, publishers_file_path):
         self.devices_file_path = devices_file_path
+        self.publishers_file_path = publishers_file_path
         # Load device configuration file as dictionary.
         with open(self.devices_file_path) as f:
             self.devices_file = yaml.safe_load(f)
+        # Load publisher configuration file as dictionary.
+        with open(self.publishers_file_path) as f:
+            self.publishers_file = yaml.safe_load(f)
         self.devices = []
         self.publishers = []
 
@@ -22,6 +27,14 @@ class Host:
             newHdd.initialize(device_yaml_dict)
             self.devices.append(newHdd)
         print("Finished intiailizing devices.")
+
+    def intialize_publishers(self):
+        for publisher_yaml_dict in self.publishers_file:
+            if(publisher_yaml_dict["publisher_type"] == "publishercsv"):
+                newPublisherCsv = PublisherCsv()
+                newPublisherCsv.initialize(publisher_yaml_dict)
+                self.publishers.append(newPublisherCsv)
+        print("Finished initializing publishers")
 
     def read_device_data(self):
         for device in self.devices:
