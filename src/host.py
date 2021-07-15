@@ -25,6 +25,8 @@ class Host:
         # For now, each device's data will be added to an entire devices_read_dat array. Then, each entry will be published according to how that publisher works.
         # I.e., all as one entry or each individually.
         self.devices_read_data = []
+        # Lock to synchronized shared data between read threads.
+        self._lock = threading.Lock()
         # TODO: Also should implement another type of function for host that allows it to spawn a different type of device that independently reads and publishes independly in the same thread.
         #       I.e., don't have to be held back by other devices waiting to retrieve data on the regular interval, if that's a concern.
         #       Something like "start_ansynchronous_devices" that spawns a thread where they can read and publish one their own terms/interval.
@@ -47,12 +49,13 @@ class Host:
         print("Finished initializing publishers")
 
     def read_device_data(self):
-        for device in self.devices:
+        for thread_num, device in enumerate(self.devices):
 
-            read_thread = threading.Thread(target=device.get_device_data)
+            read_thread = threading.Thread(target=self.update_devices_read_data_async, args=(thread_num, device,))
             self.read_threads.append(read_thread)
+            print(f"started thread {thread_num}")
             read_thread.start()
-            print("started thread")
+            
             # device_data_dict = device.get_device_data()
             # Append device data to devices_read_data array to then be published.
             # self.devices_read_data.append(device_data_dict)
@@ -61,6 +64,17 @@ class Host:
             t.join()
             # print(f"Thread {thread_num} finished getting device data")
         print("Finished reading device data.")
+        print(self.devices_read_data)
+
+    
+    def update_devices_read_data_async(self, thread_name, device):
+        print(f"Thread {thread_name} starting update.")
+        print(f"Thread {thread_name} about to lock.")
+        with self._lock:
+            print(f"Thread {thread_name} has the lock!")
+            device_data_dict = device.get_device_data()
+            self.devices_read_data.append(device_data_dict)
+            print(f"Thread {thread_name} about to release lock")
 
     def publish_device_data(self):
         for publisher in self.publishers:
