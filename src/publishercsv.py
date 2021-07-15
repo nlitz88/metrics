@@ -1,7 +1,6 @@
-from publisherinterface import PublisherInterface
+from publisherbase import PublisherBase
 
-# NOTE: Again, another seemingly useless base class, but could carry some useful functionality later on.
-class PublisherBase:
+class PublisherCsv(PublisherBase):
     def initialize(self, publisher_config_dict):
         pass
     def publish_data(self, device_data_dict):

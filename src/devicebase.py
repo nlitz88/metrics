@@ -1,6 +1,6 @@
 from deviceinterface import DeviceInterface
 # NOTE: Right now, this base class is kind of useless, more of just here for good practice. May keep if it becomes useful later.
-class DeviceBase:
+class DeviceBase(DeviceInterface):
     def initialize(self, device_config_dict):
         pass
     def get_device_data(self):
