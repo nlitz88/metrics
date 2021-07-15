@@ -28,8 +28,10 @@ This interface would define operations like publish_data that would essentially 
 TODO: there should be a separate python module (not interface) that is responsible for taking the data and making it available via a REST API. This could be like metricsserver or something.
 Anyways, the plan is to cache the data in redis, and then that server would basically be pulling data from redis upon request. Could also implement custom endpoints to make direct calls to get values directlyl raqther than through redis.
 
+# TODO: Detail the difference between the metrics host container, (redis, and metrics server). This is how the application will be split up.
+# Multiple host instances can talk to the same redis instance, for instance.
 
-## Host Classes
+<!-- ## Host Classes
 **Host Classes** are defined for each different type of host that a publisher class might use to retrieve its data. This might be more appropriate in a situation where someone wants to utilize the publishing infrastructure of metrics without the default host class with all of its device collection methods. Hosts have a list of devices and publishers that they interact with.
 
 Additionally, a more common implementation of this interface is having both local and remote host implementations. In this way, one instance of metrics can instantiate multiple hosts, grabbing data from a local host that connects to the docker socket and another host whose devices are in a virtual machine and must be queried via ssh. In this model, devices in the devices.yaml file would specify a host. Additionally, a hosts.yaml file would define hosts by hosttype and IP adddress (and potentially any other variant/types that might be created).
@@ -40,7 +42,7 @@ One machine would have one instance of metrics running (perhaps on the hyperviso
 This interface defines the operations that each host class must implement. If a class is a host, then it must be able to initialize a list of devices to get data from, publish device data to a list of publishers, etc. There may be more requirements as time moves along.
 
 #### Host Base Class
-This class will serve as the core of the **metrics** application. As the default host, it will initialize a list of device objects, make calls to those devices to retrieve their data, and then send data to each in a list of publishers. Again, the functionality of this class may vary significantly as development continues, but this is the general intention of this class as of right now.
+This class will serve as the core of the **metrics** application. As the default host, it will initialize a list of device objects, make calls to those devices to retrieve their data, and then send data to each in a list of publishers. Again, the functionality of this class may vary significantly as development continues, but this is the general intention of this class as of right now. -->
 
 
 
