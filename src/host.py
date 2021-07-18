@@ -54,12 +54,21 @@ class Host:
 
             read_thread = threading.Thread(target=self.update_devices_read_data_async, args=(thread_num, device,))
             self.read_threads.append(read_thread)
-            print(f"started thread {thread_num}")
+            # print(f"started thread {thread_num}")
             read_thread.start()
             
             # device_data_dict = device.get_device_data()
             # Append device data to devices_read_data array to then be published.
             # self.devices_read_data.append(device_data_dict)
+        
+        # Or spawn a new thread to do this debugging
+        while(True):
+            time.sleep(2)
+            with self._lock:
+                for output in self.devices_read_data:
+                    print(output)
+                self.devices_read_data.clear()
+            print()
             
         for thread_num, t in enumerate(self.read_threads):
             t.join()
@@ -74,13 +83,13 @@ class Host:
             #       This would take the place of the manual interval here. This keeps devices of the same type in SYNC!
             # TODO: Make this a configurable interval as a device property.
             time.sleep(2)
-            print(f"Thread {thread_name} starting update.")
-            print(f"Thread {thread_name} about to lock.")
+            # print(f"Thread {thread_name} starting update.")
+            # print(f"Thread {thread_name} about to lock.")
             with self._lock:
-                print(f"Thread {thread_name} has the lock!")
+                # print(f"Thread {thread_name} has the lock!")
                 device_data_dict = device.get_device_data()
                 self.devices_read_data.append(device_data_dict)
-                print(f"Thread {thread_name} about to release lock")
+                # print(f"Thread {thread_name} about to release lock")
 
     def publish_device_data(self):
         for publisher in self.publishers:

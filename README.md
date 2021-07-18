@@ -44,6 +44,7 @@ This interface defines the operations that each host class must implement. If a 
 #### Host Base Class
 This class will serve as the core of the **metrics** application. As the default host, it will initialize a list of device objects, make calls to those devices to retrieve their data, and then send data to each in a list of publishers. Again, the functionality of this class may vary significantly as development continues, but this is the general intention of this class as of right now. -->
 
-
+#### Host Configuration File
+This is a todo, however, eventually, all device and publisher configurations will be consolidated into a single configuration for that host. This just makes more sense practically for someone setting up an instance of metrics host.
 
 # Question: Do I just want to rewrite what I have of this so far in GO just for the sake of learning it? Maybe...
