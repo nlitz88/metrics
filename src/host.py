@@ -1,6 +1,7 @@
 import yaml
 from subprocess import check_output
 import threading
+import multiprocessing
 import time
 
 # Each device class must be imported here. 
@@ -52,7 +53,7 @@ class Host:
     def read_device_data(self):
         for thread_num, device in enumerate(self.devices):
 
-            read_thread = threading.Thread(target=self.update_devices_read_data_async, args=(thread_num, device,))
+            read_thread = multiprocessing.Process(target=self.update_devices_read_data_async, args=(thread_num, device,))
             self.read_threads.append(read_thread)
             # print(f"started thread {thread_num}")
             read_thread.start()
@@ -65,9 +66,10 @@ class Host:
         while(True):
             time.sleep(2)
             with self._lock:
-                for output in self.devices_read_data:
-                    print(output)
-                self.devices_read_data.clear()
+                # for output in self.devices_read_data:
+                #     print(output)
+                print(self.devices_read_data)
+                # self.devices_read_data.clear()
             print()
             
         for thread_num, t in enumerate(self.read_threads):

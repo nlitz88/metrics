@@ -47,4 +47,21 @@ This class will serve as the core of the **metrics** application. As the default
 #### Host Configuration File
 This is a todo, however, eventually, all device and publisher configurations will be consolidated into a single configuration for that host. This just makes more sense practically for someone setting up an instance of metrics host.
 
+Within this consolidated host configuration, there will be a section for host particular settings as well as section containing an **array** of devices.
+
+Each device specified will specify a device type, followed by a subsection of device-type specified properties/attributes that the type requires, and a publisher type, followed by a subsection of publisher-type specified properties/attributes that the type requires.
+
+As an example, you might add a device configuration as follows:
+```
+- device_type: "hdd"
+    serial_number: "5000cca021405dd4"
+    dev_location:
+    device_group: "plottingDriveGroup"
+  publisher_type: "redis"
+    address: 192.168.0.251
+    username: nlitz88
+    password: rats
+  publisher_type: "
+```
+
 # Question: Do I just want to rewrite what I have of this so far in GO just for the sake of learning it? Maybe...
