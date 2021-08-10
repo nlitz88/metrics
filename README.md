@@ -47,3 +47,5 @@ This class will serve as the core of the **metrics** application. As the default
 
 
 # Question: Do I just want to rewrite what I have of this so far in GO just for the sake of learning it? Maybe...
+
+# UPDATE: I decided to bag this project simply because I basically ended up designing the groundwork for...Telegraf. Unbeknownst to me, this was exactly what I was looking for and built just like what I was gearing up for. Though I would've liked to develop down this rabbit hole, I had to consider the practicality of using Telegraf and just how much more robust it already was.
